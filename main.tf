@@ -1,49 +1,26 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.77.0"
+# module "vpc" {
+#   source  = "terraform-aws-modules/vpc/aws"
+#   version = "2.77.0"
 
-  name                 = "education"
-  cidr                 = "10.0.0.0/16"
-  azs                  = data.aws_availability_zones.available.names
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-}
+#   name                 = "education"
+#   cidr                 = "10.0.0.0/16"
+#   azs                  = data.aws_availability_zones.available.names
+#   public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+#   enable_dns_hostnames = true
+#   enable_dns_support   = true
+# }
 
-resource "aws_db_subnet_group" "education" {
-  name       = "education"
-  subnet_ids = module.vpc.public_subnets
+# resource "aws_db_subnet_group" "education" {
+#   name       = "education"
+#   subnet_ids = module.vpc.public_subnets
 
-  tags = {
-    Name = "Education"
-  }
-}
-
-resource "aws_security_group" "rds" {
-  name   = "education_rds"
-  vpc_id = module.vpc.vpc_id
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "education_rds"
-  }
-}
+#   tags = {
+#     Name = "Education"
+#   }
+# }
 
 resource "aws_db_parameter_group" "education" {
   name   = "education"
@@ -56,11 +33,13 @@ resource "aws_db_parameter_group" "education" {
 }
 
 resource "aws_db_instance" "education" {
-  identifier             = "education"
-  instance_class         = "db.t3.micro"
-  allocated_storage      = 20
-  engine                 = "postgres"
-  engine_version         = "14.5"
+  identifier              = "education"
+  instance_class          = "db.t3.micro"
+  allocated_storage       = 20
+  backup_retention_period = 7
+  engine                  = "postgres"
+  engine_version          = "14.5"
+  # db_name                 = "test"
   username               = data.vault_generic_secret.db_credentials.data["dbusername"]
   password               = data.vault_generic_secret.db_credentials.data["dbpassword"]
   db_subnet_group_name   = aws_db_subnet_group.education.name

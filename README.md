@@ -15,3 +15,10 @@ Terraform and read RDS DB credentials from vault.
 > Useful links:
 1. [Managing vault secrets tutorial](https://developer.hashicorp.com/vault/docs/v1.11.x/secrets/kv/kv-v2)
 1. [Creating a vault cluster on Minikube using helm chart with the raft backend](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-raft)
+
+
+# Credits:
+
+- https://hub.docker.com/r/hashicorp/vault
+- https://www.youtube.com/watch?v=sIkRK33AY50
+- https://spacelift.io/blog/terraform-aws-vpc
